@@ -1,0 +1,7 @@
+#root {
+  height: 100vh;
+  background-image: url("bg2.jpg");
+  background-color: black;
+  background-size: cover;
+  color: white;
+}
