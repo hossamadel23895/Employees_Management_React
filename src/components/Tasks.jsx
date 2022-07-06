@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import style from "./Tasks.module.css";
 import { Table } from "react-bootstrap";
 
 export default function Tasks() {

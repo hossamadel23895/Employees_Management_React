@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import style from "./Profile.module.css";
-import { Button, Card } from "react-bootstrap";
+import React from "react";
 
 export default function Profile() {
   return (

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import style from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Login(props) {
+  const navigate = useNavigate();
+
   let [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [message, setMessage] = useState("");
 
-  let navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem("userData")) {
+      return navigate("/dashboard");
+    }
+  }, []);
 
   function getUser(e) {
     let userCopy = { ...user };
@@ -48,13 +53,8 @@ export default function Login(props) {
     <div className="h-100">
       <div className="container d-flex justify-content-center align-items-center h-100">
         <form className="w-50" onSubmit={formSubmit}>
-          <div
-            className="d-flex justify-content-center text-white h3"
-          >
-            Welcome to MR Modeling Services Website
-          </div>
           <div className="d-flex justify-content-center text-white h3">
-            Please login to continue
+            Login
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
