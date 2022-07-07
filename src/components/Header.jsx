@@ -1,7 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -46,7 +44,7 @@ const ResponsiveAppBar = () => {
     handleCloseUserMenu();
     localStorage.removeItem("userData");
     setLoggedIn = false;
-    navigate("/home");
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -56,12 +54,16 @@ const ResponsiveAppBar = () => {
   }, [loggedIn]);
 
   return (
-    <AppBar position="fixed" sx={{ bgcolor: "#141414" }} style={{zIndex:"9999"}}>
+    <AppBar
+      position="fixed"
+      sx={{ bgcolor: "#212529" }}
+      style={{ zIndex: "9999" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             component={NavLink}
-            to="/home"
+            to="/login"
             variant="h6"
             noWrap
             sx={{
@@ -74,7 +76,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            MRms
+            MRem
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -104,47 +106,11 @@ const ResponsiveAppBar = () => {
               sx={{
                 display: { xs: "block", md: "none" },
               }}
-            >
-              <MenuItem
-                component={NavLink}
-                to="/home"
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">Home</Typography>
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/about-us"
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">About Us</Typography>
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/services"
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">Services</Typography>
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/portfolio"
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">Portfolio</Typography>
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/contact-us"
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">Contact Us</Typography>
-              </MenuItem>
-            </Menu>
+            ></Menu>
           </Box>
           <Typography
             component={NavLink}
-            to="/home"
+            to="/login"
             variant="h5"
             noWrap
             sx={{
@@ -158,50 +124,9 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            MRms
+            MRem
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              component={NavLink}
-              to="/home"
-              onClick={handleCloseNavMenu}
-              sx={{ mx: 3, my: 2, color: "white", display: "block" }}
-            >
-              Home
-            </Button>
-            <Button
-              component={NavLink}
-              to="/about-us"
-              onClick={handleCloseNavMenu}
-              sx={{ mx: 3, my: 2, color: "white", display: "block" }}
-            >
-              About us
-            </Button>
-            <Button
-              component={NavLink}
-              to="/services"
-              onClick={handleCloseNavMenu}
-              sx={{ mx: 3, my: 2, color: "white", display: "block" }}
-            >
-              Services
-            </Button>
-            <Button
-              component={NavLink}
-              to="/portfolio"
-              onClick={handleCloseNavMenu}
-              sx={{ mx: 3, my: 2, color: "white", display: "block" }}
-            >
-              Portfolio
-            </Button>
-            <Button
-              component={NavLink}
-              to="/contact-us"
-              onClick={handleCloseNavMenu}
-              sx={{ mx: 3, my: 2, color: "white", display: "block" }}
-            >
-              Contact Us
-            </Button>
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 
           <Box sx={{ flexGrow: 0 }}>
             {loggedIn ? (
@@ -242,7 +167,11 @@ const ResponsiveAppBar = () => {
                   >
                     profile
                   </MenuItem>
-                  <MenuItem onClick={logoutUser} component={NavLink} to="/home">
+                  <MenuItem
+                    onClick={logoutUser}
+                    component={NavLink}
+                    to="/login"
+                  >
                     Logout
                   </MenuItem>
                 </Menu>

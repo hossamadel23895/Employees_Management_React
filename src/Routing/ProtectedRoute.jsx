@@ -1,10 +1,10 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import NotLoggedIn from "../components/NotLoggedIn";
 
 export default function ProtectedRoute({ children }) {
   if (!localStorage.getItem("userData")) {
     // user is not logged in
-    return <Navigate to="/not-logged-in" />;
+    return <NotLoggedIn />;
   }
   return children;
 }

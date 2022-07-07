@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function Login(props) {
+export default function Login() {
   const navigate = useNavigate();
 
   let [user, setUser] = useState({
@@ -50,12 +50,12 @@ export default function Login(props) {
   }
 
   return (
-    <div className="h-100">
-      <div className="container d-flex justify-content-center align-items-center h-100">
+    <div style={{ height: "80vh" }}>
+      <div className="container d-flex justify-content-center align-items-center h-100 flex-column">
+        <div className="d-flex justify-content-center text-white h1 mb-5">
+          Welcome to MR Management website
+        </div>
         <form className="w-50" onSubmit={formSubmit}>
-          <div className="d-flex justify-content-center text-white h3">
-            Welcome to BFS Employees website
-          </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
               Your Email
