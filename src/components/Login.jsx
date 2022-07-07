@@ -54,7 +54,7 @@ export default function Login(props) {
       <div className="container d-flex justify-content-center align-items-center h-100">
         <form className="w-50" onSubmit={formSubmit}>
           <div className="d-flex justify-content-center text-white h3">
-            Login
+            Welcome to BFS Employees website
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
