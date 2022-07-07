@@ -56,7 +56,7 @@ const ResponsiveAppBar = () => {
   }, [loggedIn]);
 
   return (
-    <AppBar position="fixed" sx={{ bgcolor: "#141414" }}>
+    <AppBar position="fixed" sx={{ bgcolor: "#141414" }} style={{zIndex:"9999"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

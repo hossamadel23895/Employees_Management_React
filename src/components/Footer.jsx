@@ -42,7 +42,7 @@ export default function Footer() {
       >
         <Toolbar style={{ justifyContent: "center", backgroundColor: "black" }}>
           <Typography variant="caption" style={{ color: "white" }}>
-            ©2022
+            MR Modeling Services ©2022 
           </Typography>
         </Toolbar>
       </AppBar>
