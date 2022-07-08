@@ -13,35 +13,21 @@ import ListUsers from "../components/Users/ListUsers";
 export default function Routing() {
   return (
     <>
-      <div style={{ paddingTop: "100px", minHeight:"100vh"}}>
+      <div style={{ paddingTop: "100px", minHeight: "100vh" }}>
         <Routes>
-          <Route path="" element={<Home />}>
-            <Route index element={<Navigate to="/login" />} />
-            <Route
-              path="dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="users"
-              element={
-                <ProtectedRoute>
-                  <ListUsers />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
           <Route
-            path="/profile"
+            path=""
             element={
               <ProtectedRoute>
-                <Profile />
+                <Home />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="/login" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="users" element={<ListUsers />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
