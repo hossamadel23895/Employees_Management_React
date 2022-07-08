@@ -7,8 +7,8 @@ export default function Home() {
     <>
       <Sidebar />
       <div
-        className="d-flex ms-auto justify-content-center align-items-center h-100 flex-column"
-        style={{ left: "270px" }}
+        className="w-75 mx-4"
+        style={{ left: "250px" , position: "relative"}}
       >
         <Outlet />
       </div>

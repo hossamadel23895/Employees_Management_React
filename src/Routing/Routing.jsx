@@ -8,7 +8,7 @@ import NotFound from "../components/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../components/Dashboard";
 import { Navigate } from "react-router-dom";
-import Users from "../components/Users";
+import ListUsers from "../components/Users/ListUsers";
 
 export default function Routing() {
   return (
@@ -29,7 +29,7 @@ export default function Routing() {
               path="users"
               element={
                 <ProtectedRoute>
-                  <Users />
+                  <ListUsers />
                 </ProtectedRoute>
               }
             />
