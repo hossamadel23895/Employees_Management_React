@@ -23,6 +23,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchBar from "material-ui-search-bar";
 
+import ManageUser from "./ManageUser";
+import AddUser from "./AddUser";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -93,36 +95,46 @@ TablePaginationActions.propTypes = {
 };
 
 function Row(props) {
-  const { row } = props;
+  const { row, handleManageUserOpen } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell>{row.calories}</TableCell>
-        <TableCell align="right">
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+      <TableRow
+        sx={{ "& > *": { borderBottom: "unset" } }}
+        onClick={() => setOpen(!open)}
+        style={{ cursor: "pointer" }}
+      >
+        <TableCell>
+          <IconButton aria-label="expand row" size="small">
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        <TableCell component="th" scope="row">
+          {row.id}
+        </TableCell>
+        <TableCell>{row.name}</TableCell>
+        <TableCell>{row.email}</TableCell>
+        <TableCell>{row.role}</TableCell>
+        <TableCell />
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Operations
-              </Typography>
               <Table size="small" aria-label="purchases">
                 <TableBody>
-                  <button className="btn btn-primary">View Vacations</button>
+                  <button
+                    className="btn btn-primary me-3"
+                    onClick={() => {
+                      handleManageUserOpen(row.id);
+                    }}
+                  >
+                    Manage User
+                  </button>
+                  <button id={row.id} className="btn btn-info me-3">
+                    View Vacations
+                  </button>
                 </TableBody>
               </Table>
             </Box>
@@ -133,33 +145,7 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-function createData(name, calories, fat) {
-  return {
-    name,
-    calories,
-    fat,
-    operations: [
-      {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
-      },
-    ],
-  };
-}
-
-export default function CustomPaginationActionsTable() {
+export default function ListUsers() {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -185,33 +171,38 @@ export default function CustomPaginationActionsTable() {
     requestSearch(searched);
   };
 
-  //ComponentDidMount
+  //List users state
   React.useEffect(() => {
-    let fetchedData = [
-      createData("test_name01", 356),
-      createData("test_name02", 159),
-      createData("test_name03", 237),
-      createData("test_name04", 262),
-      createData("test_name05", 305),
-      createData("test_name06", 356),
-      createData("test_name07", 159),
-      createData("test_name08", 237),
-      createData("test_name09", 262),
-      createData("test_name10", 305),
-      createData("test_name11", 356),
-      createData("test_name12", 159),
-      createData("test_name13", 237),
-      createData("test_name14", 262),
-      createData("test_name15", 305),
-      createData("test_name16", 356),
-      createData("test_name17", 159),
-      createData("test_name18", 237),
-      createData("test_name19", 262),
-      createData("test_name20", 305),
-    ];
-    setOriginalRows([...fetchedData]);
-    setRows([...fetchedData]);
+    let userToken = JSON.parse(localStorage.getItem("userData")).token;
+
+    const axios = require("axios");
+    async function makeRequest() {
+      const config = {
+        method: "get",
+        url: `http://${window.location.hostname}:8000/api/users`,
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+
+      let res = await axios(config).catch((err) => {
+        console.log(err.response.statusText);
+      });
+
+      let usersResArr = res.data.data;
+      let usersArr = [];
+      usersResArr.forEach((user) => {
+        usersArr.push({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role.name,
+        });
+      });
+      setOriginalRows([...usersArr]);
+      setRows([...usersArr]);
+    }
+    makeRequest();
   }, []);
+  //List users state
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -226,18 +217,73 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
+  // Add User dialog //
+  const [openAddUserDialog, setOpenAddUserDialog] = React.useState(false);
+  const handleAddUserOpen = () => setOpenAddUserDialog(true);
+  const handleAddUserClose = () => setOpenAddUserDialog(false);
+  // Add User dialog //
+
+  // Manage User dialog //
+  const [managedUserLoaded, setManagedUserLoaded] = React.useState(false);
+  const [openManageUserDialog, setOpenManageUserDialog] = React.useState(false);
+  const [managedUserData, setManagedUserData] = React.useState({ role: "" });
+  const handleManageUserOpen = (userId) => {
+    let userToken = JSON.parse(localStorage.getItem("userData")).token;
+
+    // Getting managed user data//
+    const axios = require("axios");
+    async function makeRequest() {
+      const config = {
+        method: "get",
+        url: `http://${window.location.hostname}:8000/api/users/${userId}`,
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+
+      let res = await axios(config).catch((err) => {
+        console.log(err.response.statusText);
+      });
+      setManagedUserData(res.data.data);
+      setManagedUserLoaded(true);
+    }
+    makeRequest();
+    setOpenManageUserDialog(true);
+  };
+  const handleManageUserClose = () => setOpenManageUserDialog(false);
+  // Manage User dialog //
+
+  // Rendering the component
   return (
     <>
       <ThemeProvider theme={darkTheme}>
+        <AddUser open={openAddUserDialog} onClose={handleAddUserClose} />
+        {managedUserLoaded && (
+          <ManageUser
+            open={openManageUserDialog}
+            onClose={handleManageUserClose}
+            managedUserData={managedUserData}
+          />
+        )}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
             <TableHead>
               <TableRow>
+                <TableCell colSpan={6}>
+                  <div className="h3 text-center">Users table</div>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell />
                 <TableCell>
-                  <p className="h5">Employee name</p>
+                  <p className="h5">ID</p>
+                </TableCell>
+                <TableCell>
+                  <p className="h5">Name</p>
                 </TableCell>
                 <TableCell>
                   <p className="h5">Email</p>
+                </TableCell>
+                <TableCell>
+                  <p className="h5">Role</p>
                 </TableCell>
                 <TableCell>
                   <SearchBar
@@ -256,7 +302,11 @@ export default function CustomPaginationActionsTable() {
                   )
                 : rows
               ).map((row) => (
-                <Row key={row.name} row={row} />
+                <Row
+                  key={row.name}
+                  row={row}
+                  handleManageUserOpen={handleManageUserOpen}
+                />
               ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
@@ -268,7 +318,7 @@ export default function CustomPaginationActionsTable() {
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
-                  colSpan={3}
+                  colSpan={6}
                   count={rows.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
@@ -287,7 +337,13 @@ export default function CustomPaginationActionsTable() {
           </Table>
         </TableContainer>
       </ThemeProvider>
-      <button className="btn btn-success mt-3">Add Employee</button>
+
+      <button
+        className="btn btn-success mt-3"
+        onClick={() => handleAddUserOpen()}
+      >
+        Add User
+      </button>
     </>
   );
 }

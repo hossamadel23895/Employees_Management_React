@@ -9,7 +9,7 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState("");
+  const [errMessage, setErrMessage] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("userData")) {
@@ -25,8 +25,6 @@ export default function Login() {
 
   async function formSubmit(e) {
     e.preventDefault();
-    console.log(JSON.stringify(user));
-
     await axios
       .post("http://localhost:8000/api/login", user)
       .then((response) => {
@@ -42,9 +40,8 @@ export default function Login() {
           window.location.href = "/dashboard";
         },
         (error) => {
-          console.log(error.response.data.message);
           let errorMsg = error.response.data.message;
-          setMessage(errorMsg);
+          setErrMessage(errorMsg);
         }
       );
   }
@@ -84,10 +81,10 @@ export default function Login() {
               Login
             </button>
           </div>
-          {message && (
+          {errMessage && (
             <div className="form-group">
               <div className="alert alert-danger" role="alert">
-                {message}
+                {errMessage}
               </div>
             </div>
           )}
