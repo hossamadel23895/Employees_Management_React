@@ -132,7 +132,7 @@ function Row(props) {
                   >
                     Manage User
                   </button>
-                  <button id={row.id} className="btn btn-info me-3">
+                  <button id={row.id} className="btn btn-secondary me-3">
                     View Vacations
                   </button>
                 </TableBody>
@@ -303,7 +303,7 @@ export default function ListUsers() {
                 : rows
               ).map((row) => (
                 <Row
-                  key={row.name}
+                  key={row.id}
                   row={row}
                   handleManageUserOpen={handleManageUserOpen}
                 />
