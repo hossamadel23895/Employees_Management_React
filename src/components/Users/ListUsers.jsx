@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,15 +15,16 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import TableHead from "@mui/material/TableHead";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchBar from "material-ui-search-bar";
+import { useTheme } from "@mui/material/styles";
 
 import ManageUser from "./ManageUser";
 import AddUser from "./AddUser";
+
+// Pagination implementation //
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -93,6 +93,7 @@ TablePaginationActions.propTypes = {
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
 };
+// Pagination implementation //
 
 function Row(props) {
   const { row, handleManageUserOpen } = props;
@@ -124,17 +125,21 @@ function Row(props) {
             <Box sx={{ margin: 1 }}>
               <Table size="small" aria-label="purchases">
                 <TableBody>
-                  <button
-                    className="btn btn-primary me-3"
-                    onClick={() => {
-                      handleManageUserOpen(row.id);
-                    }}
-                  >
-                    Manage User
-                  </button>
-                  <button id={row.id} className="btn btn-secondary me-3">
-                    View Vacations
-                  </button>
+                  <TableRow>
+                    <td>
+                      <button
+                        className="btn btn-primary me-3"
+                        onClick={() => {
+                          handleManageUserOpen(row.id);
+                        }}
+                      >
+                        Manage User
+                      </button>
+                      <button id={row.id} className="btn btn-secondary me-3">
+                        View Vacations
+                      </button>
+                    </td>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -146,15 +151,10 @@ function Row(props) {
 }
 
 export default function ListUsers() {
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-    },
-  });
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  // Search implementation //
   const [searched, setSearched] = React.useState("");
   const [originalRows, setOriginalRows] = React.useState([]);
   const [rows, setRows] = React.useState([]);
@@ -170,6 +170,7 @@ export default function ListUsers() {
     setSearched("");
     requestSearch(searched);
   };
+  // Search implementation //
 
   //List users state
   React.useEffect(() => {
@@ -254,89 +255,84 @@ export default function ListUsers() {
   // Rendering the component
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
-        <AddUser open={openAddUserDialog} onClose={handleAddUserClose} />
-        {managedUserLoaded && (
-          <ManageUser
-            open={openManageUserDialog}
-            onClose={handleManageUserClose}
-            managedUserData={managedUserData}
-          />
-        )}
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                <TableCell colSpan={6}>
-                  <div className="h3 text-center">Users table</div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell />
-                <TableCell>
-                  <p className="h5">ID</p>
-                </TableCell>
-                <TableCell>
-                  <p className="h5">Name</p>
-                </TableCell>
-                <TableCell>
-                  <p className="h5">Email</p>
-                </TableCell>
-                <TableCell>
-                  <p className="h5">Role</p>
-                </TableCell>
-                <TableCell>
-                  <SearchBar
-                    value={searched}
-                    onChange={(searchVal) => requestSearch(searchVal)}
-                    onCancelSearch={() => cancelSearch()}
-                  />
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : rows
-              ).map((row) => (
-                <Row
-                  key={row.id}
-                  row={row}
-                  handleManageUserOpen={handleManageUserOpen}
+      <AddUser open={openAddUserDialog} onClose={handleAddUserClose} />
+      {managedUserLoaded && (
+        <ManageUser
+          open={openManageUserDialog}
+          onClose={handleManageUserClose}
+          managedUserData={managedUserData}
+        />
+      )}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              <TableCell colSpan={6}>
+                <div className="h3 text-center">Users table</div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell />
+              <TableCell>
+                <p className="h5">ID</p>
+              </TableCell>
+              <TableCell>
+                <p className="h5">Name</p>
+              </TableCell>
+              <TableCell>
+                <p className="h5">Email</p>
+              </TableCell>
+              <TableCell>
+                <p className="h5">Role</p>
+              </TableCell>
+              <TableCell>
+                <SearchBar
+                  value={searched}
+                  onChange={(searchVal) => requestSearch(searchVal)}
+                  onCancelSearch={() => cancelSearch()}
                 />
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10]}
-                  colSpan={6}
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+            ).map((row) => (
+              <Row
+                key={row.id}
+                row={row}
+                handleManageUserOpen={handleManageUserOpen}
+              />
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
               </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      </ThemeProvider>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10]}
+                colSpan={6}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
 
       <button
         className="btn btn-success mt-3"

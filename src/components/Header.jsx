@@ -14,9 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -43,7 +40,7 @@ const ResponsiveAppBar = () => {
   const logoutUser = () => {
     handleCloseUserMenu();
     localStorage.removeItem("userData");
-    setLoggedIn = false;
+    setLoggedIn(false);
     navigate("/login");
   };
 
@@ -54,11 +51,7 @@ const ResponsiveAppBar = () => {
   }, [loggedIn]);
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{ bgcolor: "#212529" }}
-      style={{ zIndex: "9999" }}
-    >
+    <AppBar position="fixed" style={{ zIndex: "9999" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

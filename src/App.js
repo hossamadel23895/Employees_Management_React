@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle";
+import Routing from "./Routing/Routing";
+import { BrowserRouter } from "react-router-dom";
+import Header from "./components/Header";
+import { makeStyles } from "@material-ui/core";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-function App() {
+import "./App.css";
+
+// Used to fix coloring bug in material ui theme //
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiPaper-root": {},
+  },
+}));
+// Used to fix coloring bug in material ui theme //
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
+
+export default function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ThemeProvider theme={darkTheme}>
+      <React.StrictMode>
+        <BrowserRouter
+          style={{ position: "relative" }}
+          className={classes.root}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Header />
+          <Routing />
+        </BrowserRouter>
+      </React.StrictMode>
+    </ThemeProvider>
   );
 }
-
-export default App;
