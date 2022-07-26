@@ -77,7 +77,7 @@ export default function AddUser(props) {
 
       let res = await axios(config)
         .then((res) => {
-            window.location.replace(`http://${window.location.hostname}:3006/users`);
+            window.location.replace(`http://${window.location.hostname}:3000/users`);
         })
         .catch((error) => {
           let errorsObject = error.response.data.errors;

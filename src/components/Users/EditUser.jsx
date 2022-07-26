@@ -87,7 +87,7 @@ export default function EditUser(props) {
       let res = await axios(config)
         .then((res) => {
           window.location.replace(
-            `http://${window.location.hostname}:3006/users`
+            `http://${window.location.hostname}:3000/users`
           );
         })
         .catch((error) => {

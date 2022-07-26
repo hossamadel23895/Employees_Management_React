@@ -9,7 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../components/Dashboard";
 import { Navigate } from "react-router-dom";
 import ListUsers from "../components/Users/ListUsers";
-import Vacations from "../components/Vacations";
+import Vacations from "../components/Vacations/Vacations";
 
 export default function Routing() {
   return (
@@ -27,8 +27,8 @@ export default function Routing() {
             <Route index element={<Navigate to="/login" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<ListUsers />} />
-            <Route path="vacations" element={<Vacations />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="users/:userId/vacations" element={<Vacations />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />

@@ -10,9 +10,6 @@ export default function Profile() {
       <div className="d-flex h4">
         Email : {JSON.parse(localStorage.getItem("userData")).email || ""}
       </div>
-      <div className="d-flex h4">
-        Role : {JSON.parse(localStorage.getItem("userData")).role || ""}
-      </div>
     </div>
   );
 }

@@ -1,0 +1,38 @@
+#vacations_main {
+  padding: 20px;
+  background-color: #1e1e1e;
+}
+
+#vacations_main * {
+  color: rgb(210, 210, 210);
+  overflow: visible;
+}
+
+body {
+  background-color: #141414;
+  color: rgb(210, 210, 210);
+}
+
+/* Style for the create vacation menu */
+.modal-dialog {
+}
+
+.modal-content * {
+  background-color: #1e1e1e;
+  color: rgb(210, 210, 210);
+}
+
+/* Style for the update vacation menu */
+.calendar-context-menu * {
+  background-color: #1e1e1e;
+  color: rgb(210, 210, 210);
+}
+
+.content:hover,
+.content:hover * {
+  background-color: #3b3b3b !important;
+}
+
+.month-container {
+  margin-top: 20px;
+}

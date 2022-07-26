@@ -20,6 +20,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchBar from "material-ui-search-bar";
 import { useTheme } from "@mui/material/styles";
+import { NavLink } from "react-router-dom";
 
 import ManageUser from "./ManageUser";
 import AddUser from "./AddUser";
@@ -135,9 +136,16 @@ function Row(props) {
                       >
                         Manage User
                       </button>
-                      <button id={row.id} className="btn btn-secondary me-3">
+                      <NavLink
+                        id={row.id}
+                        className="btn btn-secondary me-3"
+                        to={{
+                          pathname: `/users/${row.id}/vacations`,
+                          state: { username: row.name },
+                        }}
+                      >
                         View Vacations
-                      </button>
+                      </NavLink>
                     </td>
                   </TableRow>
                 </TableBody>

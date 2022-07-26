@@ -17,6 +17,7 @@ export default function NavSidebar() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  let userId = JSON.parse(localStorage.getItem("userData")).id;
 
   return (
     <React.Fragment>
@@ -25,7 +26,7 @@ export default function NavSidebar() {
         style={style.sidebar}
         className="bg-dark py-5 my-4 fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 ease-out transform translate-x-0 border-r-2 lg:translate-x-0 lg:static lg:inset-0 ease-out translate-x-0"
       >
-        <div className="flex items-center justify-center text-center pt-4 pb-4">
+        <div className="flex items-center justify-center text-center pt-4 pb-4 text-light">
           <span className="mx-2 text-2xl font-semibold">
             {JSON.parse(localStorage.getItem("userData")).email}
           </span>
@@ -47,6 +48,10 @@ export default function NavSidebar() {
             {
               title: "Users",
               itemId: "/users",
+            },
+            {
+              title: "My Vacations",
+              itemId: `/users/${userId}/vacations`,
             },
           ]}
         />
