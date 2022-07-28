@@ -25,6 +25,8 @@ import { NavLink } from "react-router-dom";
 import ManageUser from "./ManageUser";
 import AddUser from "./AddUser";
 
+import * as Urls from "../../Routing/Urls";
+
 // Pagination implementation //
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -188,7 +190,7 @@ export default function ListUsers() {
     async function makeRequest() {
       const config = {
         method: "get",
-        url: `http://${window.location.hostname}:8000/api/users`,
+        url: `${Urls.mainUrl}/users`,
         headers: { Authorization: `Bearer ${userToken}` },
       };
 
@@ -244,7 +246,7 @@ export default function ListUsers() {
     async function makeRequest() {
       const config = {
         method: "get",
-        url: `http://${window.location.hostname}:8000/api/users/${userId}`,
+        url: `${Urls.mainUrl}/users/${userId}`,
         headers: { Authorization: `Bearer ${userToken}` },
       };
 

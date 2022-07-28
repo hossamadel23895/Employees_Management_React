@@ -3,12 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import Routing from "./Routing/Routing";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/Layout/Header";
 import { makeStyles } from "@material-ui/core";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import "./App.css";
-import ShowForRole from "./Routing/ShowForRole";
 
 // Used to fix coloring bug in material ui theme //
 const useStyles = makeStyles((theme) => ({

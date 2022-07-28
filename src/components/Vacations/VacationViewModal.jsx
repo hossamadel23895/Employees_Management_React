@@ -19,7 +19,7 @@ export default function VacationViewModal(props) {
                 Type
               </label>
               <div className="col-sm-9">
-                <p> {props.currentVacation.type.name} </p>
+                <p> {props.currentVacation.type} </p>
               </div>
             </div>
             <div className="form-group row">
@@ -51,50 +51,23 @@ export default function VacationViewModal(props) {
                 htmlFor="vacation-reason"
                 className="col-sm-3 control-label"
               >
-                Created By
+                Confirmed at
               </label>
               <div className="col-sm-9">
-                <p>{props.currentVacation.created_by}</p>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label
-                htmlFor="vacation-reason"
-                className="col-sm-3 control-label"
-              >
-                Updated By
-              </label>
-              <div className="col-sm-9">
-                <p>{props.currentVacation.updated_by}</p>
+                <p>To be added</p>
               </div>
             </div>
           </form>
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="d-flex justify-content-between w-100">
-            <Button
-              variant="danger"
-              onClick={() => props.setShowModal("delete")}
-            >
-              Delete
-            </Button>
-            <div>
-              <Button
-                className="me-2"
-                variant="secondary"
-                onClick={() => props.setShowModal(null)}
-              >
-                Close
-              </Button>
-              <Button
-                variant="warning"
-                onClick={() => props.setShowModal("edit")}
-              >
-                Edit Vacation
-              </Button>
-            </div>
-          </div>
+          <Button
+            className="me-2"
+            variant="secondary"
+            onClick={() => props.setShowModal(null)}
+          >
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

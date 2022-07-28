@@ -5,69 +5,52 @@ import "tippy.js/dist/tippy.css"; // optional for styling
 import tippy from "tippy.js";
 
 import structuredClone from "@ungap/structured-clone";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 import "./Vacations.css";
-import VacationCreateModal from "./VacationCreateModal";
 import VacationViewModal from "./VacationViewModal";
 
 import * as Utils from "./VacationsUtils.jsx";
-import VacationEditModal from "./VacationEditModal";
-import VacationDeleteModal from "./VacationDeleteModal";
+import * as Requests from "../../Helpers/Requests";
+
+import * as Urls from "../../Routing/Urls";
+
+import {
+  userAccessingOwnResource,
+  userAccessingManagedResource,
+} from "../../Helpers/Helpers";
+import NoPermission from "../ErrorPages/NoPermission";
 
 export default function Vacations() {
   const params = useParams();
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
   //>>>>>>>>>>>>>>>>>>>>>>> Vacations Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
   const [showModal, setShowModal] = React.useState(null);
-  const [vacationsTypes, setVacationsTypes] = React.useState([]);
   const [renderedData, setRenderedData] = React.useState([]);
   const [originalData, setOriginalData] = React.useState([]);
-  const [currentUser, setCurrentUser] = React.useState(null);
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [vacationsTypes, setVacationsTypes] = React.useState([]);
+  const [requestedUser, setRequestedUser] = React.useState({});
   const [currentVacation, setCurrentVacation] = React.useState({});
-  const updateCurrentVacationPair = (key, value) => {
-    if (key.toLowerCase().includes("type")) {
-      setCurrentVacation({
-        ...currentVacation,
-        [key]: vacationsTypes.find((ele) => ele.id == value),
-      });
-    } else if (key.toLowerCase().includes("date")) {
-      let date = new Date(value);
-      setCurrentVacation({
-        ...currentVacation,
-        [key]: Utils.longToIso(date),
-      });
-    } else {
-      setCurrentVacation({
-        ...currentVacation,
-        [key]: value,
-      });
-    }
-  };
+
   let userToken = JSON.parse(localStorage.getItem("userData")).token;
+  let userId = currentUser.id;
+  let urlId = params.userId;
   let tooltip = null;
   const axios = require("axios");
+  const location = useLocation();
+  console.log(originalData);
   //<<<<<<<<<<<<<<<<<<<<<<< Vacations Data <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
-
   React.useEffect(() => {
-    // Fetch user Data using id
-    axios({
-      method: "get",
-      url: `http://localhost:8000/api/users/${params.userId}`,
-      headers: { Authorization: `Bearer ${userToken}` },
-    })
-      .then((res) => {
-        setCurrentUser(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Requests.getMe(userToken).then((me) => {
+      setCurrentUser(me);
+    });
 
     // fetch vacations types.
     axios({
       method: "get",
-      url: `http://localhost:8000/api/types`,
+      url: `${Urls.mainUrl}/types`,
       headers: { Authorization: `Bearer ${userToken}` },
     })
       .then((res) => {
@@ -76,11 +59,27 @@ export default function Vacations() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  React.useEffect(() => {
+    // update component when the url change.
+    // Getting requested resource user
+    axios({
+      method: "get",
+      url: `${Urls.mainUrl}/users/${params.userId}`,
+      headers: { Authorization: `Bearer ${userToken}` },
+    })
+      .then((res) => {
+        setRequestedUser(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // fetch vacations
     axios({
       method: "get",
-      url: `http://localhost:8000/api/users/${params.userId}/vacations`,
+      url: `${Urls.mainUrl}/users/${params.userId}/vacations`,
       headers: { Authorization: `Bearer ${userToken}` },
     })
       .then((res) => {
@@ -89,7 +88,7 @@ export default function Vacations() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [location]);
 
   React.useEffect(() => {
     // Convert date format to match the calender library requirement.
@@ -130,84 +129,81 @@ export default function Vacations() {
   };
 
   const handleDayClick = (e) => {
-    let _currentVacation = Utils.createEmptyOriginalObj();
     if (e.events.length) {
       setShowModal("view");
+      let _currentVacation = Utils.createEmptyOriginalObj();
       _currentVacation = {
         ..._currentVacation,
         ...structuredClone(e.events[0]),
       };
-    } else {
-      setShowModal("create");
-      _currentVacation = {
-        ..._currentVacation,
-        startDate: e.date,
-        endDate: e.date,
-      };
+      setCurrentVacation(Utils.renderedToOriginal([_currentVacation])[0]);
     }
-    setCurrentVacation(Utils.renderedToOriginal([_currentVacation])[0]);
   };
-
   return (
     renderedData &&
-    currentUser && (
-      <div
-        id="vacations_main"
-        className="d-flex justify-content-center align-items-center h-100 flex-column"
-      >
-        <h2 className="mt-3 mb-5">Vacations of : {currentUser.name} </h2>
-        <Calendar
-          dataSource={renderedData}
-          enableRangeSelection={true}
-          enableContextMenu={false}
-          displayWeekNumber={true}
-          weekStart={6}
-          // allowOverlap={false}
-          // style="background"
-          onDayClick={(e) => handleDayClick(e)}
-          onDayEnter={(e) => handleDayEnter(e)}
-          onDayLeave={() => handleDayLeave()}
-          onRangeSelected={(e) =>
-            setCurrentVacation({ startDate: e.startDate, endDate: e.endDate })
-          }
-        />
-        {currentVacation.type && (
-          <>
-            <VacationViewModal
-              showModal={showModal}
-              setShowModal={setShowModal}
-              currentVacation={currentVacation}
-              vacationsTypes={vacationsTypes}
+    Object.keys(currentUser).length && (
+      <>
+        {userAccessingOwnResource(userId, urlId) ||
+        userAccessingManagedResource(userId, urlId) ? (
+          <div
+            id="vacations_main"
+            className="d-flex justify-content-center align-items-center h-100 flex-column"
+          >
+            <div className="d-flex w-100 justify-content-between">
+              <h2 className="mt-3 mb-5">Vacations of : {requestedUser.name}</h2>
+              <div className="w-25 d-flex">
+                <div className="me-3 d-flex align-items-center">
+                  <div className="d-flex me-2">Vacations Index :</div>
+                </div>
+                <div className="d-flex flex-column">
+                  {vacationsTypes.map((type, index) => {
+                    return (
+                      <div className="d-flex index-row">
+                        <div
+                          className="mt-1"
+                          style={{
+                            height: "18px",
+                            width: "18px",
+                            backgroundColor: `${type.color}`,
+                          }}
+                        ></div>
+                        <div className="ms-2">{type.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            <Calendar
+              dataSource={renderedData}
+              enableRangeSelection={true}
+              enableContextMenu={false}
+              displayWeekNumber={true}
+              weekStart={6}
+              // allowOverlap={false}
+              // style="background"
+              onDayClick={(e) => handleDayClick(e)}
+              onDayEnter={(e) => handleDayEnter(e)}
+              onDayLeave={() => handleDayLeave()}
+              onRangeSelected={(e) =>
+                setCurrentVacation({
+                  startDate: e.startDate,
+                  endDate: e.endDate,
+                })
+              }
             />
-            <VacationCreateModal
-              originalData={originalData}
-              setOriginalData={setOriginalData}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              currentVacation={currentVacation}
-              setCurrentVacation={setCurrentVacation}
-              updateCurrentVacationPair={updateCurrentVacationPair}
-              vacationsTypes={vacationsTypes}
-            />
-            <VacationEditModal
-              originalData={originalData}
-              setOriginalData={setOriginalData}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              vacationsTypes={vacationsTypes}
-              currentVacation={currentVacation}
-              updateCurrentVacationPair={updateCurrentVacationPair}
-            />
-            <VacationDeleteModal
-              showModal={showModal}
-              setShowModal={setShowModal}
-              originalData={originalData}
-              setOriginalData={setOriginalData}
-              currentVacation={currentVacation}
-            />
-          </>
+            {currentVacation.type && (
+              <VacationViewModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                currentVacation={currentVacation}
+              />
+            )}
+          </div>
+        ) : (
+          <NoPermission />
         )}
-      </div>
+      </>
     )
   );
 }

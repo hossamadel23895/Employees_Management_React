@@ -18,6 +18,33 @@ export default function NavSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   let userId = JSON.parse(localStorage.getItem("userData")).id;
+  let userRole = JSON.parse(localStorage.getItem("userData")).role.name;
+  let managingRoles = ["admin", "leader_1", "leader_2"];
+
+  // Creating NavBar items list
+  let navItems = [];
+
+  navItems.push({
+    title: "Dashboard",
+    itemId: "/dashboard",
+  });
+
+  if (managingRoles.includes(userRole)) {
+    navItems.push({
+      title: "Users",
+      itemId: "/users",
+    });
+  }
+
+  navItems.push({
+    title: "My Vacation Requests",
+    itemId: `/users/${userId}/requests`,
+  });
+
+  navItems.push({
+    title: "My Vacations",
+    itemId: `/users/${userId}/vacations`,
+  });
 
   return (
     <React.Fragment>
@@ -40,20 +67,7 @@ export default function NavSidebar() {
               navigate(itemId);
             }
           }}
-          items={[
-            {
-              title: "Dashboard",
-              itemId: "/dashboard",
-            },
-            {
-              title: "Users",
-              itemId: "/users",
-            },
-            {
-              title: "My Vacations",
-              itemId: `/users/${userId}/vacations`,
-            },
-          ]}
+          items={navItems}
         />
       </div>
     </React.Fragment>

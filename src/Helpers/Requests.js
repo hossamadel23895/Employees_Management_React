@@ -1,12 +1,14 @@
+import * as Urls from "../Routing/Urls";
+
 export const getMe = async (token) => {
   const axios = require("axios");
   let resData = await axios({
     method: "get",
-    url: `http://localhost:8000/api/me`,
+    url: `${Urls.mainUrl}/me`,
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => {
-      return res.data;
+      return res.data.data;
     })
     .catch((err) => {
       console.log(err);

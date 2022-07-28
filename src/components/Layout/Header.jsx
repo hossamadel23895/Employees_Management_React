@@ -69,7 +69,8 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            MRem
+            <span class="align-bottom h5 mt-auto mb-0 ms-3">MR</span>
+            <span class="align-bottom h6 mt-auto mb-0 ms-3">HR management</span>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -117,7 +118,10 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            MRem
+            <span class="align-bottom h5 mt-auto mb-0 ms-3">MR</span>
+            <span class="align-bottom h6 mt-auto mb-0 ms-3">
+              HR management
+            </span>{" "}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 

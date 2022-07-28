@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import * as Urls from "../../Routing/Urls";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function Login() {
   async function formSubmit(e) {
     e.preventDefault();
     await axios
-      .post("http://localhost:8000/api/login", user)
+      .post(`${Urls.mainUrl}/login`, user)
       .then((response) => {
         if (response.data.data) {
           let userData = response.data.data;

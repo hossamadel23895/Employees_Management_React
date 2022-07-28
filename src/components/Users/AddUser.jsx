@@ -8,6 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import DialogContent from "@mui/material/DialogContent";
 import MenuItem from "@mui/material/MenuItem";
+import * as Urls from "../../Routing/Urls";
 
 export default function AddUser(props) {
   const { onClose, selectedValue, open } = props;
@@ -30,7 +31,7 @@ export default function AddUser(props) {
     async function makeRequest() {
       const config = {
         method: "get",
-        url: `http://${window.location.hostname}:8000/api/roles`,
+        url: `${Urls.mainUrl}/roles`,
         headers: { Authorization: `Bearer ${userToken}` },
       };
 
@@ -70,7 +71,7 @@ export default function AddUser(props) {
     async function makeRequest() {
       const config = {
         method: "post",
-        url: `http://${window.location.hostname}:8000/api/users`,
+        url: `${Urls.mainUrl}/users`,
         headers: { Authorization: `Bearer ${userToken}` },
         data: formData,
       };
