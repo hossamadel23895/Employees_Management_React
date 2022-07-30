@@ -1,1 +1,1 @@
-export const mainUrl = "http://some-production-url/api";
+export const mainUrl = "https://mr-hrm-backend.herokuapp.com/api";

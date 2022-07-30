@@ -1,7 +1,11 @@
 {
-  "name": "to-do-list_reactjs",
+  "name": "mr-hrm reactjs",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18.6.0",
+    "npm": "8.13.2"
+  },
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
